@@ -14,13 +14,11 @@ def upload_file(request):
         uploaded_file = request.FILES.get("file")
         if not uploaded_file:
             return JsonResponse({"error": "No file provided"}, status=400)
-
         if not uploaded_file.name.endswith((".xls", ".xlsx")):
             return JsonResponse({"error": "Invalid file format"}, status=400)
 
         path = default_storage.save(CURRENT_FILE_PATH, ContentFile(uploaded_file.read()))
         df = pd.read_excel(path)
-
         return JsonResponse({"columns": list(df.columns)})
     return JsonResponse({"error": "Invalid request"}, status=400)
 
@@ -37,13 +35,11 @@ def perform_operation(request):
                 return JsonResponse({"error": "No file uploaded"}, status=400)
 
             df = pd.read_excel(CURRENT_FILE_PATH)
-
             if operation == "add_column":
                 new_col = params.get("new_column_name")
                 if not new_col:
                     return JsonResponse({"error": "Missing new_column_name"}, status=400)
                 df[new_col] = None  
-
             elif operation == "sum":
                 new_col = params.get("new_column_name")
                 cols = params.get("columns_to_sum", [])
@@ -54,7 +50,6 @@ def perform_operation(request):
                     if i not in col_list:
                         return JsonResponse({"error": "Column not found"}, status=400)        
                 df[new_col] = df[cols[0]] + df[cols[1]]
-
             else:
                 return JsonResponse({"error": "Invalid operation"}, status=400)
 
