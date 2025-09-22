@@ -16,7 +16,6 @@ Can be tested using **Postman**.
 URL: **POST** http://127.0.0.1:8000/upload/
 
 Body → form-data → key = file, value = your Excel file
-
 Expected Response: JSON response of columns
 
 2. **Perform Operation**
@@ -24,6 +23,27 @@ Expected Response: JSON response of columns
 URL: **POST** http://127.0.0.1:8000/operation/
 
 Description: Runs a sample operation on the uploaded Excel file (add column/sum).
+Body: Raw → JSON
+
+Example 1: Add new column
+```bash
+{
+  "operation": "add_column",
+  "params": {
+    "new_column_name": "ExtraColumn"
+  }
+}
+```
+Example 2: Sum two columns
+```bash
+{
+  "operation": "sum",
+  "params": {
+    "new_column_name": "Total",
+    "columns_to_sum": ["Column1", "Column2"]
+  }
+}
+```
 
 Expected Response: JSON data with results.
 
